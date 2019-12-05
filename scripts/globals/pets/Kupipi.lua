@@ -11,7 +11,6 @@ require("scripts/globals/msg")
 
 function onMobSpawn(mob)  
     local weaponskill = 0
-	local cureCooldown = 12
 	local debuffCooldown = 10
 	local buffCooldown = 7
 	local ailmentCooldown = 15
@@ -35,38 +34,7 @@ function onMobSpawn(mob)
 	end)
 
 	mob:addListener("ROAM_TICK", "KUPIPI_CURE_TICK", function(mob, player, target)
-	    local battletime = os.time()
-		local cureTime = mob:getLocalVar("cureTime")
-
-		if (battletime > cureTime + cureCooldown) then
-		    local party = player:getParty()
-            for _,member in ipairs(party) do
-                if (member:getHPP() <= 30) then
-					local spell = doEmergencyCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-                elseif (member:getHPP() <= 75) then
-					local spell = doCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-				elseif (member:hasStatusEffect(dsp.effect.SLEEP)) then
-					local spell = doMinCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-				end
-				
-			end
-			mob:setLocalVar("cureTime",battletime - 4)  -- If no member has low HP change global check to 8 seconds
-		end
+	    handleHealing(mob, player)
 	end)
 
 	mob:addListener("COMBAT_TICK", "KUPIPI_BUFF_TICK", function(mob, player, target)
@@ -105,38 +73,7 @@ function onMobSpawn(mob)
 	end)
 
 	mob:addListener("COMBAT_TICK", "KUPIPI_CURE_TICK", function(mob, player, target)
-	    local battletime = os.time()
-		local cureTime = mob:getLocalVar("cureTime")
-
-		if (battletime > cureTime + cureCooldown) then
-		    local party = player:getParty()
-            for _,member in ipairs(party) do
-                if (member:getHPP() <= 30) then
-					local spell = doEmergencyCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-                elseif (member:getHPP() <= 75) then
-					local spell = doCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-				elseif (member:hasStatusEffect(dsp.effect.SLEEP)) then
-					local spell = doMinCure(mob)
-					if (spell > 0) then
-                        mob:castSpell(spell, member)
-					    mob:setLocalVar("cureTime",battletime)
-                        break
-					end
-				end
-				
-			end
-			mob:setLocalVar("cureTime",battletime - 4)  -- If no member has low HP change global check to 8 seconds
-		end
+	    handleHealing(mob, player)
 	end)
 
 	mob:addListener("COMBAT_TICK", "KUPIPI_COMBAT_TICK", function(mob, target)
@@ -301,6 +238,69 @@ function doDebuff(mob, target)
 
     return debuff
 end
+
+function handleHealing(mob, player)
+	local battletime = os.time()
+	local cureTime = mob:getLocalVar("cureTime")
+	local test = player:getTrusts()
+	local cureCooldown = 12
+
+	if (battletime > cureTime + cureCooldown) then
+		local party = player:getParty()
+		for _,member in ipairs(party) do
+			if (member:getHPP() <= 30) then
+				local spell = doEmergencyCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			elseif (member:getHPP() <= 75) then
+				local spell = doCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			elseif (hasSleepEffects(member)) then
+				local spell = doMinCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			end
+			
+		end
+		local trusts = player:getTrusts()
+		for _,member in ipairs(trusts) do
+			if (member:getHPP() <= 30) then
+				local spell = doEmergencyCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			elseif (member:getHPP() <= 75) then
+				local spell = doCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			elseif (hasSleepEffects(member)) then
+				local spell = doMinCure(mob)
+				if (spell > 0) then
+					mob:castSpell(spell, member)
+					mob:setLocalVar("cureTime",battletime)
+					break
+				end
+			end	
+		end
+		mob:setLocalVar("cureTime",battletime - 4)  -- If no member has low HP change global check to 8 seconds
+	end
+end
+
 
 function doMinCure(mob)
     local mp = mob:getMP()

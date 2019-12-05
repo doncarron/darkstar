@@ -60,6 +60,13 @@ void CTrustEntity::PostTick()
     if (loc.zone && updatemask && status != STATUS_DISAPPEAR)
     {
         loc.zone->PushPacket(this, CHAR_INRANGE, new CEntityUpdatePacket(this, ENTITY_UPDATE, updatemask));
+
+        // Did we really need this here?
+        if (this->isDead())
+        {
+            return;
+        }
+
         for (auto PTrust : ((CCharEntity*)PMaster)->PTrusts)
         {
             if (PTrust == this)
@@ -111,15 +118,6 @@ void CTrustEntity::Spawn()
     CBattleEntity::Spawn();
     ((CCharEntity*)PMaster)->pushPacket(new CTrustSyncPacket((CCharEntity*)PMaster, this));
     luautils::OnMobSpawn(this);
-}
-
-bool CTrustEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
-{
-    if (targetFlags & TARGET_PLAYER && PInitiator->allegiance == allegiance)
-    {
-        return false;
-    }
-    return CMobEntity::ValidTarget(PInitiator, targetFlags);
 }
 
 void CTrustEntity::OnAbility(CAbilityState& state, action_t& action)

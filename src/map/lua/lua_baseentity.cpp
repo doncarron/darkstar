@@ -11953,6 +11953,41 @@ inline int32 CLuaBaseEntity::getPet(lua_State* L)
 }
 
 /************************************************************************
+*  Function: getTrusts()
+*  Purpose : Returns the Entity Objects of all Trusts associated with a player
+*  Example : local trusts = getTrusts()
+*  Notes   :
+************************************************************************/
+
+inline int32 CLuaBaseEntity::getTrusts(lua_State* L)
+{
+    auto trusts = ((CCharEntity*)m_PBaseEntity)->PTrusts;
+
+    if (!trusts.empty())
+    {
+        int size = trusts.size();
+  
+        lua_createtable(L, size, 0);
+        for (int i = 0; i < size; i++)
+        {
+            lua_getglobal(L, CLuaBaseEntity::className);
+            lua_pushstring(L, "new");
+            lua_gettable(L, -2);
+            lua_insert(L, -2);
+            lua_pushlightuserdata(L, (void*) trusts.at(i));
+            lua_pcall(L, 2, 1, 0);
+
+            lua_rawseti(L, -2, i+1);
+        };
+
+        return 1;
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
+
+/************************************************************************
 *  Function: getPetID()
 *  Purpose : Returns the Pet ID of an entity
 *  Example : local PetID = pet:getPetID()
@@ -14447,6 +14482,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasPet),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPet),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getTrusts),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPetID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPetElement),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getMaster),

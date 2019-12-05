@@ -1156,6 +1156,12 @@ bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
             }
         }
     }
+
+    // A Trust can target anything and a master can target their trusts
+    if (PInitiator->objtype == TYPE_TRUST || this == PInitiator->PMaster) {
+        return true;
+    }
+
     if ((targetFlags & TARGET_SELF) && (this == PInitiator || (PInitiator->objtype == TYPE_PET &&
         static_cast<CPetEntity*>(PInitiator)->getPetType() == PETTYPE_AUTOMATON && this == PInitiator->PMaster)))
     {

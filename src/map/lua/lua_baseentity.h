@@ -584,6 +584,7 @@ public:
 
     int32 hasPet(lua_State*);                // returns true if the player has a pet
     int32 getPet(lua_State*);                // Creates an LUA reference to a pet entity
+    int32 getTrusts(lua_State*);             // Returns the Entity Objects of all Trusts associated with a player
     int32 getPetID(lua_State*);              // If the entity has a pet, returns the PetID to identify pet type.
     int32 getMaster(lua_State*);
     int32 getPetElement(lua_State*);
