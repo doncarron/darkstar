@@ -1094,6 +1094,7 @@ namespace petutils
         PMaster->StatusEffectContainer->CopyConfrontationEffect(PTrust);
         PMaster->loc.zone->InsertPET(PTrust);
         PMaster->PParty->ReloadParty();
+        PTrust->Spawn();
     }
 
     void SpawnMobPet(CBattleEntity* PMaster, uint32 PetID)
@@ -1724,7 +1725,6 @@ namespace petutils
 
     CTrustEntity* LoadTrust(CCharEntity* PMaster, uint32 TrustID)
     {
-        DSP_DEBUG_BREAK_IF(TrustID >= g_PPetList.size());
         CTrustEntity* PTrust = new CTrustEntity(PMaster);
         PTrust->loc = PMaster->loc;
         PTrust->m_OwnerID.id = PMaster->id;
@@ -1732,7 +1732,7 @@ namespace petutils
 
         // spawn me randomly around master
         PTrust->loc.p = nearPosition(PMaster->loc.p, CPetController::PetRoamDistance, (float)M_PI);
-        Pet_t* trust = g_PPetList.at(TrustID);
+        Pet_t* trust = g_PPetList.at(TrustID-2);
         PTrust->look = trust->look;
         PTrust->name = trust->name;
         PTrust->m_name_prefix = trust->name_prefix;
@@ -1751,14 +1751,17 @@ namespace petutils
         PTrust->SetSLevel(PMaster->GetSLevel());
 
         // TODO: Proper stats per trust
-        PTrust->setModifier(Mod::ATT, battleutils::GetMaxSkill(SKILL_CLUB, JOB_WHM, PTrust->GetMLevel()));
-        PTrust->setModifier(Mod::ACC, battleutils::GetMaxSkill(SKILL_CLUB, JOB_WHM, PTrust->GetMLevel()));
-        PTrust->setModifier(Mod::EVA, battleutils::GetMaxSkill(SKILL_THROWING, JOB_WHM, PTrust->GetMLevel())); // Throwing??
-        PTrust->setModifier(Mod::DEF, battleutils::GetMaxSkill(SKILL_THROWING, JOB_WHM, PTrust->GetMLevel()));
+        PTrust->setModifier(Mod::ATT, 2 * battleutils::GetMaxSkill(SKILL_SWORD, JOB_PLD, PTrust->GetMLevel()));
+        PTrust->setModifier(Mod::ACC, battleutils::GetMaxSkill(SKILL_SWORD, JOB_PLD, PTrust->GetMLevel()));
+        PTrust->setModifier(Mod::EVA, battleutils::GetMaxSkill(SKILL_SWORD, JOB_PLD, PTrust->GetMLevel())); // Throwing??
+        PTrust->setModifier(Mod::DEF, battleutils::GetMaxSkill(SKILL_SWORD, JOB_PLD, PTrust->GetMLevel()));
         //set C magic evasion
         PTrust->setModifier(Mod::MEVA, battleutils::GetMaxSkill(SKILL_ELEMENTAL_MAGIC, JOB_RDM, PTrust->GetMLevel()));
         // HP/MP STR/DEX/etc..
         LoadTrustStats(PTrust);
+
+        ((CItemWeapon*)PTrust->m_Weapons[SLOT_MAIN])->setDelay((uint16)(floor(1000.0f * (320.0f / 60.0f))));
+        ((CItemWeapon*)PTrust->m_Weapons[SLOT_MAIN])->setDamage((uint16)(floor(PTrust->stats.STR * 0.74f)));
 
         PTrust->health.tp = 0;
         PTrust->UpdateHealth();

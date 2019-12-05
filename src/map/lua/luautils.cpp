@@ -2611,6 +2611,7 @@ namespace luautils
 
         int8 File[255];
         PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+        PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
             snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
         if (PTarget->objtype == TYPE_PC)
@@ -2651,6 +2652,7 @@ namespace luautils
 
         int8 File[255];
         PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+        PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
             snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
         if (prepFile(File, "onMobDisengage"))
@@ -2722,6 +2724,7 @@ namespace luautils
 
         int8 File[255];
         PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+        PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
             snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
         if (prepFile(File, "onMobFight"))
@@ -2876,6 +2879,7 @@ namespace luautils
             int8 File[255];
             memset(File, 0, sizeof(File));
             PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+            PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
                 snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());;
 
             lua_pushnil(LuaHandle);
@@ -2924,6 +2928,7 @@ namespace luautils
 
         int8 File[255];
         PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+        PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
             snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
         if (prepFile(File, "onMobSpawn"))
         {
@@ -3011,6 +3016,7 @@ namespace luautils
 
         int8 File[255];
         PMob->objtype == TYPE_PET ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CPetEntity*>(PMob)->GetScriptName().c_str()) :
+        PMob->objtype == TYPE_TRUST ? snprintf((char*)File, sizeof(File), "scripts/globals/pets/%s.lua", static_cast<CMobEntity*>(PMob)->GetName()) :
             snprintf((char*)File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
         if (prepFile(File, "onMobDespawn"))

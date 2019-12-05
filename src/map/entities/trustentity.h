@@ -39,6 +39,7 @@ public:
     virtual void FadeOut() override;
     virtual void Die() override;
     virtual void Spawn() override;
+    virtual void OnAbility(CAbilityState&, action_t&) override;
     virtual bool ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags) override;
 };
 

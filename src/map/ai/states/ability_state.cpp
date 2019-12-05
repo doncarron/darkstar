@@ -136,7 +136,7 @@ bool CAbilityState::Update(time_point tick)
 
 bool CAbilityState::CanUseAbility()
 {
-    if (m_PEntity->objtype == TYPE_PC)
+    if (m_PEntity->objtype == TYPE_PC || m_PEntity->objtype == TYPE_TRUST)
     {
         auto PAbility = GetAbility();
         auto PChar = static_cast<CCharEntity*>(m_PEntity);
@@ -146,8 +146,8 @@ bool CAbilityState::CanUseAbility()
             return false;
         }
         if (PChar->StatusEffectContainer->HasStatusEffect({EFFECT_AMNESIA, EFFECT_IMPAIRMENT}) ||
-            (!PAbility->isPetAbility() && !charutils::hasAbility(PChar, PAbility->getID())) ||
-            (PAbility->isPetAbility() && !charutils::hasPetAbility(PChar, PAbility->getID() - 496)))
+            (!(m_PEntity->objtype == TYPE_TRUST) && !PAbility->isPetAbility() && !charutils::hasAbility(PChar, PAbility->getID())) ||
+            (!(m_PEntity->objtype == TYPE_TRUST) && PAbility->isPetAbility() && !charutils::hasPetAbility(PChar, PAbility->getID() - 496)))
         {
             PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_UNABLE_TO_USE_JA2));
             return false;

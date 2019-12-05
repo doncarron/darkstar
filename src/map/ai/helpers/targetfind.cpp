@@ -243,12 +243,19 @@ void CTargetFind::addAllInAlliance(CBattleEntity* PTarget, bool withPet)
 
 void CTargetFind::addAllInParty(CBattleEntity* PTarget, bool withPet)
 {
-
     PTarget->ForParty([this, withPet](CBattleEntity* PMember)
     {
         addEntity(PMember, withPet);
-    });
 
+        if (PMember->objtype == TYPE_TRUST) {
+
+            CCharEntity* PMaster = (CCharEntity*)PMember->PMaster;
+            for (CTrustEntity* trust : PMaster->PTrusts)
+            {
+                addEntity((CBattleEntity*)trust, withPet);
+            }
+        }
+    });
 }
 
 void CTargetFind::addAllInEnmityList()
@@ -330,8 +337,7 @@ bool CTargetFind::validEntity(CBattleEntity* PTarget)
         return false;
     }
 
-    if (m_PBattleEntity->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect() ||
-        m_PBattleEntity->PBattlefield != PTarget->PBattlefield || m_PBattleEntity->PInstance != PTarget->PInstance)
+    if (m_PBattleEntity->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect())
     {
         return false;
     }
