@@ -639,8 +639,8 @@ inline int32 CLuaBaseEntity::getLocalVar(lua_State* L)
 inline int32 CLuaBaseEntity::setLocalVar(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isstring(L, 1));
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
+    // DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isstring(L, 1));
+    // DSP_DEBUG_BREAK_IF(lua_isnil(L, 2) || !lua_isnumber(L, 2));
 
     const char* var = lua_tostring(L, 1);
     auto val = (uint32)lua_tointeger(L, 2);
@@ -10414,14 +10414,16 @@ inline int32 CLuaBaseEntity::hasStatusEffect(lua_State *L)
 
     if (lua_gettop(L) >= 2)
     {
-        hasEffect = ((CBattleEntity*)m_PBaseEntity)->StatusEffectContainer->HasStatusEffect(
-            (EFFECT)lua_tointeger(L, 1),
-            (uint16)lua_tointeger(L, 2));
+        auto effect = (EFFECT)lua_tointeger(L, 1);
+        auto subid = (uint16)lua_tointeger(L, 2);
+
+        hasEffect = ((CBattleEntity*)m_PBaseEntity)->StatusEffectContainer->HasStatusEffect(effect, subid);
     }
     else
     {
-        hasEffect = ((CBattleEntity*)m_PBaseEntity)->StatusEffectContainer->HasStatusEffect(
-            (EFFECT)lua_tointeger(L, 1));
+        auto effect = (EFFECT)lua_tointeger(L, 1);
+
+        hasEffect = ((CBattleEntity*)m_PBaseEntity)->StatusEffectContainer->HasStatusEffect(effect);
     }
     lua_pushboolean(L, hasEffect);
     return 1;

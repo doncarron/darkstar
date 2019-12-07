@@ -2941,8 +2941,8 @@ INSERT INTO `mob_skills` VALUES (3102,2176,'infaunal_flop',1,18.0,2000,1000,4,0,
 -- INSERT INTO `mob_skills` VALUES (3112,2856,'pflug',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3113,2857,'lunge',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3114,2858,'gambit',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (3115,2859,'bellatrix_of_light',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (3116,2860,'bellatrix_of_shadows',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (3115,2859,'bellatrix_of_light',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (3116,2860,'bellatrix_of_shadows',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3117,2861,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3118,2862,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3119,2863,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
@@ -3277,9 +3277,9 @@ INSERT INTO `mob_skills` VALUES (3416,291,'charged_whisker',1,12.5,2000,1500,4,0
 -- INSERT INTO `mob_skills` VALUES (3448,3192,'uppercut',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3449,3193,'infernal_bulwark',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3450,3194,'earthbreaker',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (3451,3195,'dynastic_gravitas',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (3452,3196,'illustrious_aid',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (3453,3197,'guiding_light',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (3451,3195,'dynastic_gravitas',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (3452,3196,'illustrious_aid',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (3453,3197,'guiding_light',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3454,3198,'coming_up_roses',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3455,3199,'#1663',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (3456,3200,'#1664',0,7.0,2000,1500,4,0,0,0,0,0,0);

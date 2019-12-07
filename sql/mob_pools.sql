@@ -5957,6 +5957,7 @@ INSERT INTO `mob_pools` VALUES (5896,'Shantotto','Shantotto',153,0x0000B80B00000
 INSERT INTO `mob_pools` VALUES (5897,'Naji','Naji',149,0x0000B90B00000000000000000000000000000000,1,1,3,220,100,0,2,0,0,0,0,32,0,3,0,0,0,1,0,0);
 INSERT INTO `mob_pools` VALUES (5898,'Kupipi','Kupipi',153,0x0000BA0B00000000000000000000000000000000,3,3,11,340,100,0,2,0,0,0,0,32,0,3,0,0,298,1,0,0);
 INSERT INTO `mob_pools` VALUES (5899,'Excenmille','Excenmille',145,0x0000BB0B00000000000000000000000000000000,7,7,8,396,100,0,2,0,0,0,0,32,0,3,0,0,0,1,0,0);
+INSERT INTO `mob_pools` VALUES (5965,'Arciela', 'Arciela', 486,	0x00006E0A00000000000000000000000000000000,5,5,3,240,100,0,2,0,0,0,0,32,0,3,0,0,3,1,0,486);
 -- INSERT INTO `mob_pools` VALUES (5897,'naji',
 -- INSERT INTO `mob_pools` VALUES (5898,'kupipi',
 -- INSERT INTO `mob_pools` VALUES (5899,'excenmille',
@@ -6025,7 +6026,6 @@ INSERT INTO `mob_pools` VALUES (5899,'Excenmille','Excenmille',145,0x0000BB0B000
 -- INSERT INTO `mob_pools` VALUES (5962,'margret',
 -- INSERT INTO `mob_pools` VALUES (5963,'chacharoon',
 -- INSERT INTO `mob_pools` VALUES (5964,'lhe_lhangavo',
--- INSERT INTO `mob_pools` VALUES (5965,'arciela',
 -- INSERT INTO `mob_pools` VALUES (5966,'mayakov',
 -- INSERT INTO `mob_pools` VALUES (5967,'qultada',
 -- INSERT INTO `mob_pools` VALUES (5968,'adelheid',

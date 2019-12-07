@@ -156,7 +156,7 @@ function doBuff(mob, player)
 			            break
 		            end
 	            end
-                mob:castSpell(pro, mob)
+                mob:castSpell(pro, member)
                 mob:setLocalVar("buffTime",battletime)
                 break
             end
@@ -189,7 +189,7 @@ function doBuff(mob, player)
 			            break
 		            end
 	            end
-                mob:castSpell(shell, mob)
+                mob:castSpell(shell, member)
                 mob:setLocalVar("buffTime",battletime)
                 break
             end

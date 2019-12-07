@@ -122,3 +122,4 @@ INSERT INTO `pet_list` VALUES (75, 'Shantotto', 5896, 1, 99, 0, 0);
 INSERT INTO `pet_list` VALUES (76, 'Naji', 5897, 1, 99, 0, 0);
 INSERT INTO `pet_list` VALUES (77, 'Kupipi', 5898, 1, 99, 0, 0);
 INSERT INTO `pet_list` VALUES (78, 'Excenmille', 5899, 1, 99, 0, 0);
+INSERT INTO `pet_list` VALUES (79, 'Arciela', 5965, 1, 99, 0, 0);
