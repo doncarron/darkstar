@@ -2,6 +2,31 @@ require("scripts/globals/status")
 
 utils = {};
 
+function utils.breakActionOnTargetDeath(actor, target)
+    if target:isDead() then
+        actor:disengage()
+    else
+        local masterTarget = actor:getMaster():getTarget():getID()
+        local masterIsEngaged = actor:getMaster():isEngaged()
+        local target = target:getID()
+
+        if (not masterIsEngaged or (masterTarget ~= target)) or (target == 0 or masterTarget == 0) then
+            actor:getMaster():PrintToPlayer("Breaking action being taken!")
+            actor:disengage()
+        end
+    end
+end
+
+function utils.ensureSingleAction(actor, func, ...)
+    local state = actor:getCurrentAction()
+
+    -- Either idle or just angry with a monster...
+    if state <= 1 then
+
+        func(...)
+    end
+end
+
 -- Shuffles a table and returns a copy of it, not the original.
 function utils.shuffle(tab)
     local copy = {}

@@ -9438,6 +9438,17 @@ int32 CLuaBaseEntity::disengage(lua_State* L)
     CBattleEntity* battleEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
     battleEntity->PAI->Disengage();
 
+    MSGBASIC_ID msg = MSGBASIC_IS_INTERRUPTED;
+
+    // Stop casting spells too!
+    if (battleEntity->PAI->IsCurrentState<CMagicState>())
+    {
+        auto magic = static_cast<CMagicState*>(battleEntity->PAI->GetCurrentState());
+        action_t action;
+
+        battleEntity->OnCastInterrupted(*magic, action, MSGBASIC_IS_INTERRUPTED);
+    }
+
     return 0;
 }
 
@@ -13373,7 +13384,7 @@ inline int32 CLuaBaseEntity::getBehaviour(lua_State* L)
 inline int32 CLuaBaseEntity::setBehaviour(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB && m_PBaseEntity->objtype != TYPE_TRUST);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
     ((CMobEntity*)m_PBaseEntity)->m_Behaviour = (uint16)lua_tointeger(L, 1);
