@@ -7,139 +7,96 @@
 -------------------------------------------------
 require("scripts/globals/status")
 require("scripts/globals/msg")
+require("scripts/globals/trust_spell")
 
 function onMobSpawn(mob)
-    mob:addStatusEffect(dsp.effect.REGAIN,25,0,0);
+    mob:addStatusEffect(dsp.effect.REGAIN,25,0,0)
+    mob:addMod(dsp.mod.ACC,1000)
+    mob:addMod(dsp.mod.MACC,1000)
 
 	mob:addListener("ROAM_TICK", "ARCIELA_BUFF_TICK", function(mob, player, target)
-        doBuff(mob, player)
+        doArcielaRoamBuff(mob, player)
+    end)
+    
+    mob:addListener("COMBAT_TICK", "ARCIELA_BATTLE_BUFF_TICK", function(mob, player, target)
+        doArcielaBattleBuff(mob, player)
+
+        -- local battletime = os.time()
+        -- local buffTime = mob:getLocalVar("battleBuffTime") 
+        -- local buffCooldown = 30;
+
+        -- if battletime > buffTime + buffCooldown then
+        --     mob:useMobAbility(3115)
+        --     mob:setLocalVar("battleMode", 1)
+        --     mob:setLocalVar("battleBuffTime",battletime)
+        -- end
 	end)
 
-	mob:addListener("COMBAT_TICK", "ARCIELA_COMBAT_TICK", function(mob, target)
-	    if (mob:getTP() > 1000) then
-		    local weaponskill = doArcielaWeaponskill(mob)
-			mob:useMobAbility(weaponskill)
-		end
+    mob:addListener("COMBAT_TICK", "ARCIELA_COMBAT_TICK", function(mob, player, target)
+        doArcielaDebuff(mob, target)
+
+	    -- if (mob:getTP() > 1000) then
+		--     local weaponskill = doArcielaWeaponskill(mob)
+		-- 	mob:useMobAbility(weaponskill)
+		-- end
 	end)
 
 end
 
-function doBuffRefresh(caster, member, mp, lvl)
-    local refreshList = {{82,60,473}, {41,40,109}}
-    local battletime = os.time()
-    local spell = 0
 
-    if not member:hasStatusEffect(dsp.effect.REFRESH) and not member:hasStatusEffect(dsp.effect.REFRESH_II) then
-        for i = 1, #refreshList do
-            if lvl >= refreshList[i][1] and mp >= refreshList[i][2] then
-                spell = refreshList[i][3]
-                break
-            end
-        end
-        caster:castSpell(spell, member)
-        caster:setLocalVar("buffTime",battletime)
-        return true
-    end
-
-    return false
-end
-
-function doBuffByEffect(caster, member, mp, lvl, effect, effectList) 
-    local spell = 0
-
-    if not member:hasStatusEffect(effect) then
-        for i = 1, #effectList do
-            if lvl >= effectList[i][1] and mp >= effectList[i][2] then
-                spell = effectList[i][3]
-                break
-            end
-        end
-        caster:castSpell(spell, member)
-        caster:setLocalVar("buffTime",battletime)
-        return true
-    end
-
-    return false
-end
-
-function doRefreshForParty(caster, party, mp, lvl)
-    for i,member in pairs(party) do
-        if doBuffRefresh(caster, member, mp, lvl) then return true end
-    end
-
-    return false
-end
-
-function doBuffForPartyByEffect(caster, party, mp, lvl, effect, effectList) 
-    for i,member in pairs(party) do
-        if doBuffByEffect(caster, member, mp, lvl, effect, effectList) then return true end
-    end
-
-    return false
-end
-
-function doGroupBuffByEffect(caster, party, mp, lvl, effect, effectList) 
-    local buffTargetCount = 0
-    local spell = 0
-
-    for i,member in pairs(party) do
-        if not member:hasStatusEffect(effect) then
-            buffTargetCount = buffTargetCount + 1
-            if buffTargetCount >= 2 then
-                for i = 1, #effectList do
-                    if (lvl >= effectList[i][1] and mp >= effectList[i][2]) then
-                        spell = effectList[i][3]
-                        break
-                    end
-                end
-                caster:castSpell(spell, member)
-                caster:setLocalVar("buffTime",battletime)
-                return true
-            end
-        end
-    end
-
-    return false
-end
-
-function isBuffAllowed(caster)
-    local battletime = os.time()
-    local buffTime = caster:getLocalVar("buffTime")
-    local buffCooldown = 10
-
-    if battletime > buffTime + buffCooldown then
-        return true;
-    end
-
-    return false;
-end
-
-function doBuff(caster, player)
-    local proRaList = {{77,84,129}, {63,65,128}, {47,46,127}, {27,28,126}, {7,9,125}}
-    local proList = {{77,84,47},{63,65,46}, {47,46,45}, {27,28,44}, {7,9,43}}
-    local shellRaList = {{87,93,134}, {68,75,133}, {57,56,132}, {37,37,131}, {17,18,130}}	
-    local shellList = {{87,93,52}, {68,75,51}, {57,56,50}, {37,37,49}, {17,18,48}}
-    local mp = caster:getMP()
-	local level = caster:getMainLvl()
+function doArcielaBattleBuff(caster, player)
     local party = player:getParty()
+    local buffData = {
+        [1] = {dsp.magic.REFRESH_II, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+        [2] = {dsp.magic.REFRESH, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+        [3] = {dsp.magic.HASTE_II, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+        [4] = {dsp.magic.HASTE, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+    }
 
-    if isBuffAllowed(caster) then
-        if doRefreshForParty(caster, party, mp, level) then return end
-        --if doGroupBuffByEffect(caster, party, mp, level, dsp.effect.PROTECT, proRaList) then return end
-        --if doGroupBuffByEffect(caster, party, mp, level, dsp.effect.SHELL, shellRaList) then return end
-        --if doBuffForPartyByEffect(caster, party, mp, level, dsp.effect.PROTECT, proList) then return end
-        --if doBuffForPartyByEffect(caster, party, mp, level, dsp.effect.SHELL, shellList) then return end
-        -- Self buffs
-        if doBuffRefresh(caster, caster, mp, level) then return end
-        if doBuffByEffect(caster, caster, mp, level, dsp.effect.PROTECT, proList) then return end
-        if doBuffByEffect(caster, caster, mp, level, dsp.effect.SHELL, shellList) then return end
-    end
+    tryBuffInOrder(caster, player, party, buffData)
 end
 
-function doArcielaWeaponskill(mob)
-    local wsList = {3451, 3452, 3453}
-	local finalWS = 0
+function doArcielaRoamBuff(caster, player)
+    local party = player:getParty()
+    local buffData = {
+        [1] = {dsp.magic.REFRESH_II, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+        [2] = {dsp.magic.REFRESH, possibleBuffTargets.PLAYER + possibleBuffTargets.CASTER},
+        [3] = {dsp.magic.PROTECT_V, possibleBuffTargets.PARTY},
+        [4] = {dsp.magic.PROTECT_IV, possibleBuffTargets.PARTY},
+        [5] = {dsp.magic.PROTECT_III, possibleBuffTargets.PARTY},
+        [6] = {dsp.magic.PROTECT_II, possibleBuffTargets.PARTY},
+        [7] = {dsp.magic.PROTECT, possibleBuffTargets.PARTY},
+        [8] = {dsp.magic.SHELL_V, possibleBuffTargets.PARTY},
+        [9] = {dsp.magic.SHELL_IV, possibleBuffTargets.PARTY},
+        [10] = {dsp.magic.SHELL_III, possibleBuffTargets.PARTY},
+        [11] = {dsp.magic.SHELL_II, possibleBuffTargets.PARTY},
+        [12] = {dsp.magic.SHELL, possibleBuffTargets.PARTY},
+    }
 
-	finalWS = wsList[math.random(1,#wsList)]
+    tryBuffInOrder(caster, player, party, buffData)
+end
+
+function doArcielaDebuff(caster, target) 
+    tryDebuffInOrder(caster, target, {
+        [1] = dsp.magic.SLOW_II,
+        [2] = dsp.magic.SLOW,
+        [3] = dsp.magic.PARALYZE_II,
+        [4] = dsp.magic.PARALYZE,
+        [5] = dsp.magic.ADDLE
+    })
+end
+
+function doArcielaWeaponskill(caster)
+    local lightWsList = {3452, 3453}
+    local darkWs = 3451
+	local finalWS = 0
+    local battleMode = caster:getLocalVar('battleMode')
+
+    if(battleMode == 1) then
+        finalWS = lightWsList[math.random(1,#lightWsList)]
+    else
+        finalWS = darkWs
+    end
+
 	return finalWS
 end
